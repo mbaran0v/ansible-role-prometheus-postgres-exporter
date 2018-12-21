@@ -1,3 +1,5 @@
+---
+
 replication:
   query: "SELECT EXTRACT(EPOCH FROM (now() - pg_last_xact_replay_timestamp()))::INT as lag"
   metrics:
