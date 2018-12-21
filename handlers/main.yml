@@ -1,7 +1,7 @@
 ---
 
-- name: restart rabbitmq_exporter
+- name: restart postgres_exporter
   systemd:
     daemon_reload: true
-    name: rabbitmq_exporter
+    name: postgres_exporter
     state: restarted
