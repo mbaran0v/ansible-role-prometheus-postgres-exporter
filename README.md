@@ -19,13 +19,12 @@ Role Variables
 The variables that can be passed to this role and a brief description about them are as follows. (For all variables, take a look at defaults/main.yml)
 
 ```yaml
-postgres_exporter_version: 0.29.0
+postgres_exporter_version: 0.4.7
 ```
 version for installation
 
 ```yaml
-postgres_exporter_listen_address: "0.0.0.0"
-postgres_exporter_listen_port: 9419
+postgres_exporter_web_listen_address: ":9187"
 ```
 listen address and port
 
@@ -35,19 +34,17 @@ postgres_exporter_root_dir: /opt/postgres_exporter
 directory for installation
 
 ```yaml
-postgres_exporter_system_group: "rabbitmq-exp"
+postgres_exporter_system_group: "postgres-exp"
 postgres_exporter_system_user: "{{ postgres_exporter_system_group }}"
 ```
 user and group for service
 
 ```yaml
-# see https://github.com/kbudde/postgres_exporter#configuration
-postgres_exporter_config_vars: |
-  RABBIT_URL=http://127.0.0.1:15672
-  RABBIT_USER=guest
-  RABBIT_PASSWORD=guest
+# see https://github.com/wrouesnel/postgres_exporter#environment-variables
+postgres_exporter_env_vars: |
+  DATA_SOURCE_NAME=postgresql://127.0.0.1:5432/?sslmode=disable
 ```
-config variables
+environment variables
 
 Dependencies
 ------------
