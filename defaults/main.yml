@@ -1,0 +1,20 @@
+---
+
+postgres_exporter_version: 0.4.7
+postgres_exporter_web_listen_address: ":9187"
+postgres_exporter_log_level: "info"
+
+postgres_exporter_download_url: "https://github.com/wrouesnel/postgres_exporter/releases/download/v{{ postgres_exporter_version }}/{{ postgres_exporter_archive_name }}"
+postgres_exporter_archive_name: "{{ postgres_exporter_extracted_dir }}.tar.gz"
+postgres_exporter_extracted_dir: "postgres_exporter_v{{ postgres_exporter_version }}_linux-{{ go_arch_map[ansible_architecture] | default(ansible_architecture) }}"
+
+postgres_exporter_root_dir: /opt/postgres_exporter
+postgres_exporter_release_dir: "{{ postgres_exporter_root_dir }}/current"
+postgres_exporter_shared_dir: "{{ postgres_exporter_root_dir }}/shared"
+
+postgres_exporter_system_group: "postgres-exp"
+postgres_exporter_system_user: "{{ postgres_exporter_system_group }}"
+
+# see https://github.com/wrouesnel/postgres_exporter#environment-variables
+postgres_exporter_env_vars: |
+  DATA_SOURCE_NAME=postgresql://127.0.0.1:5432/?sslmode=disable

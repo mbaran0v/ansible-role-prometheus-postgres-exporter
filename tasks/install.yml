@@ -1,0 +1,93 @@
+---
+
+- name: Create the postgres_exporter group
+  group:
+    name: "{{ postgres_exporter_system_group }}"
+    state: present
+    system: true
+
+- name: Create the postgres_exporter user
+  user:
+    name: "{{ postgres_exporter_system_user }}"
+    groups: "{{ postgres_exporter_system_group }}"
+    append: true
+    shell: /usr/sbin/nologin
+    system: true
+    createhome: false
+    home: "{{ postgres_exporter_root_dir }}"
+
+- name: create postgres_exporter directories
+  file:
+    path: "{{ item }}"
+    state: directory
+    owner: "{{ postgres_exporter_system_user }}"
+    group: "{{ postgres_exporter_system_group }}"
+    mode: 0750
+  with_items:
+    - "{{ postgres_exporter_root_dir }}"
+    - "{{ postgres_exporter_root_dir }}/tmp"
+
+- name: download archive to temporary folder
+  get_url:
+    url: "{{ postgres_exporter_download_url }}"
+    dest: "{{ postgres_exporter_root_dir }}/tmp/{{ postgres_exporter_archive_name }}"
+    remote_src: true
+  register: _download_archive
+  until: _download_archive is succeeded
+  retries: 5
+  delay: 2
+
+- name: unpack binaries
+  unarchive:
+    src: "{{ postgres_exporter_root_dir }}/tmp/{{ postgres_exporter_archive_name }}"
+    dest: "{{ postgres_exporter_root_dir }}/tmp"
+    remote_src: yes
+    creates: "{{ postgres_exporter_root_dir }}/tmp/{{ postgres_exporter_extracted_dir }}/postgres_exporter"
+
+- name: initialize the deploy root and gather facts
+  deploy_helper:
+    path: "{{ postgres_exporter_root_dir }}"
+    release: "{{ postgres_exporter_version }}"
+    state: present
+
+- name: create release directory
+  file:
+    dest: "{{ deploy_helper.new_release_path }}"
+    state: directory
+    owner: "{{ postgres_exporter_system_user }}"
+    group: "{{ postgres_exporter_system_group }}"
+    mode: 0750
+
+- name: propagate binaries
+  command: mv {{ postgres_exporter_root_dir }}/tmp/{{ postgres_exporter_extracted_dir }}/{{ item }} {{ deploy_helper.new_release_path }}
+  tags: skip_ansible_lint
+  with_items:
+    - postgres_exporter
+
+- name: create config
+  template:
+    src: envs.j2
+    dest: "{{ deploy_helper.shared_path }}/envs"
+    owner: root
+    group: "{{ postgres_exporter_system_group }}"
+    mode: 0750
+  notify:
+    - restart postgres_exporter
+
+- name: create systemd service unit
+  template:
+    src: postgres_exporter.service.j2
+    dest: /etc/systemd/system/postgres_exporter.service
+    owner: root
+    group: root
+    mode: 0644
+  notify:
+    - restart postgres_exporter
+
+- name: finalize the deploy, removing the unfinished file and switching the symlink
+  deploy_helper:
+    path: "{{ postgres_exporter_root_dir }}"
+    release: "{{ deploy_helper.new_release }}"
+    state: finalize
+  notify:
+    - restart postgres_exporter

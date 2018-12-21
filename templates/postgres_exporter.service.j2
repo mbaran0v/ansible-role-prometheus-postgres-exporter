@@ -1,0 +1,18 @@
+[Unit]
+Description=Prometheus PostgreSQL Exporter
+Documentation=https://github.com/wrouesnel/postgres_exporter
+After=network.target
+
+[Service]
+Type=simple
+User={{ postgres_exporter_system_user }}
+Group={{ postgres_exporter_system_group }}
+EnvironmentFile={{ postgres_exporter_shared_dir }}/envs
+ExecStart={{ postgres_exporter_release_dir }}/postgres_exporter \
+    --web.listen-address={{ postgres_exporter_web_listen_address }} \
+    --log.level={{ postgres_exporter_log_level }}
+SyslogIdentifier=postgres_exporter
+Restart=always
+
+[Install]
+WantedBy=multi-user.target
