@@ -10,6 +10,9 @@ Group={{ postgres_exporter_system_group }}
 EnvironmentFile={{ postgres_exporter_shared_dir }}/envs
 ExecStart={{ postgres_exporter_release_dir }}/postgres_exporter \
     --web.listen-address={{ postgres_exporter_web_listen_address }} \
+{% if postgres_exporter_extend_queries_use|bool %}
+    --extend.query-path={{ postgres_exporter_shared_dir }}/queries.yaml \
+{% endif %}
     --log.level={{ postgres_exporter_log_level }}
 SyslogIdentifier=postgres_exporter
 Restart=always
