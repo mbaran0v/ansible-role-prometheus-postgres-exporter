@@ -1,11 +1,10 @@
 # Ansible role: prometheus-postgres-exporter
 
-[![Build Status](https://travis-ci.org/mbaran0v/ansible-role-prometheus-postgres-exporter.svg?branch=master)](https://travis-ci.org/mbaran0v/ansible-role-prometheus-postgres-exporter) [![License](https://img.shields.io/badge/license-MIT%20License-brightgreen.svg)](https://opensource.org/licenses/MIT) [![GitHub tag](https://img.shields.io/github/tag/mbaran0v/anansible-role-prometheus-postgres-exporter.svg)](https://github.com/mbaran0v/ansible-role-prometheus-postgres-exporter/tags) [![Open Source Love](https://badges.frapsoft.com/os/v1/open-source.svg?v=103)](https://github.com/ellerbrock/open-source-badges/) [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)](http://makeapullrequest.com)
+[![Build Status](https://travis-ci.org/mbaran0v/ansible-role-prometheus-postgres-exporter.svg?branch=master)](https://travis-ci.org/mbaran0v/ansible-role-prometheus-postgres-exporter) [![License](https://img.shields.io/badge/license-MIT%20License-brightgreen.svg)](https://opensource.org/licenses/MIT) [![GitHub tag](https://img.shields.io/github/tag/mbaran0v/ansible-role-prometheus-postgres-exporter.svg)](https://github.com/mbaran0v/ansible-role-prometheus-postgres-exporter/tags) [![Open Source Love](https://badges.frapsoft.com/os/v1/open-source.svg?v=103)](https://github.com/ellerbrock/open-source-badges/) [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)](http://makeapullrequest.com)
 
 Ansible role for install and configure [Prometheus Postgres Exporter](https://github.com/wrouesnel/postgres_exporter). Currently this works on Debian and RedHat based linux systems. Tested platforms are:
 
 * Ubuntu 16.04
-* Debian 9
 * CentOS 7
 
 Requirements
@@ -34,8 +33,8 @@ postgres_exporter_root_dir: /opt/postgres_exporter
 directory for installation
 
 ```yaml
-postgres_exporter_system_group: "postgres-exp"
-postgres_exporter_system_user: "{{ postgres_exporter_system_group }}"
+postgres_exporter_user: postgres-exp
+postgres_exporter_group: "{{ postgres_exporter_user }}"
 ```
 user and group for service
 
@@ -54,7 +53,6 @@ None
 Example Playbook
 ----------------
 
-Including an example of how to use your role (for instance, with variables passed in as parameters) is always nice for users too:
 
 ```yaml
 - hosts: app

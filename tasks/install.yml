@@ -75,7 +75,7 @@
       with_items:
         - postgres_exporter
 
-when: not postgres_exporter_bin.stat.exists or postgres_exporter_force_install|bool
+  when: not postgres_exporter_bin.stat.exists or postgres_exporter_force_install|bool
 
 - name: create file with env variables
   template:
@@ -83,7 +83,7 @@ when: not postgres_exporter_bin.stat.exists or postgres_exporter_force_install|b
     dest: "{{ deploy_helper.shared_path }}/envs"
     owner: "{{ postgres_exporter_user }}"
     group: "{{ postgres_exporter_group }}"
-    mode: 0750
+    mode: 0600
   notify:
     - restart postgres_exporter
 
@@ -92,9 +92,9 @@ when: not postgres_exporter_bin.stat.exists or postgres_exporter_force_install|b
     src: "{{ postgres_exporter_extend_queries_filename }}"
     dest: "{{ deploy_helper.shared_path }}/queries.yaml"
     owner: "{{ postgres_exporter_user }}"
-    group: "{{ postgres_exporter_system_group }}"
+    group: "{{ postgres_exporter_group }}"
     backup: yes
-    mode: 0750
+    mode: 0600
   when: postgres_exporter_extend_queries_use|bool
   notify:
     - restart postgres_exporter
