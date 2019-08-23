@@ -43,7 +43,7 @@ user and group for service
 postgres_exporter_env_vars: |
   DATA_SOURCE_NAME=postgresql://127.0.0.1:5432/?sslmode=disable
 ```
-environment variables
+[environment variables](https://github.com/wrouesnel/postgres_exporter#environment-variables)
 
 Dependencies
 ------------
