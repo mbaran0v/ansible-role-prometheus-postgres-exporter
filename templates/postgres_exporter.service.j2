@@ -5,8 +5,8 @@ After=network.target
 
 [Service]
 Type=simple
-User={{ postgres_exporter_system_user }}
-Group={{ postgres_exporter_system_group }}
+User={{ postgres_exporter_user }}
+Group={{ postgres_exporter_group }}
 EnvironmentFile={{ postgres_exporter_shared_dir }}/envs
 ExecStart={{ postgres_exporter_release_dir }}/postgres_exporter \
     --web.listen-address={{ postgres_exporter_web_listen_address }} \

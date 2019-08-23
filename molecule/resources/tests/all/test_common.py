@@ -1,6 +1,13 @@
 
 debian_os = ['debian', 'ubuntu']
 rhel_os = ['redhat', 'centos']
+version = '0.4.7'
+root_dir = '/opt/postgres_exporter'
+config_file = root_dir + '/shared/' + '/envs'
+service_name = 'postgres_exporter'
+user_name = 'postgres-exp'
+group_name = user_name
+socket = 'tcp://0.0.0.0:9187'
 
 
 def test_distribution(host):
@@ -8,54 +15,50 @@ def test_distribution(host):
 
 
 def test_install_dir(host):
-    f = host.file('/opt/postgres_exporter')
+    f = host.file(root_dir)
 
     assert f.exists
     assert f.is_directory
 
 
-def test_config_file(host):
-    f = host.file('/opt/postgres_exporter/shared/envs')
-
-    assert f.exists
-    assert f.is_file
-
-
 def test_release_dir(host):
-    f = host.file('/opt/postgres_exporter/releases/0.4.7')
+    f = host.file(root_dir + '/releases/' + version)
 
     assert f.exists
     assert f.is_directory
 
 
 def test_release_symlink_dir(host):
-    f = host.file('/opt/postgres_exporter/current')
+    f = host.file(root_dir + '/current')
 
     assert f.exists
     assert f.is_symlink
-    assert f.linked_to == '/opt/postgres_exporter/releases/0.4.7'
+    assert f.linked_to == root_dir + '/releases/' + version
 
 
 def test_service(host):
-    s = host.service('postgres_exporter')
+    s = host.service(service_name)
 
     assert s.is_enabled
     assert s.is_running
 
 
-def test_socket(host):
-    s = host.socket('tcp://0.0.0.0:9187')
-
-    assert s.is_listening
-
-
 def test_user(host):
-    u = host.user('postgres-exp')
+    u = host.user(user_name)
 
+    assert u.exists
+    assert u.group == group_name
     assert u.shell == '/usr/sbin/nologin'
 
 
-def test_group(host):
-    g = host.user('postgres-exp')
+def test_config(host):
+    f = host.file(config_file)
 
-    assert g.exists
+    assert f.exists
+    assert oct(f.mode) == '0o600'
+
+
+def test_socket(host):
+    s = host.socket(socket)
+
+    assert s.is_listening
