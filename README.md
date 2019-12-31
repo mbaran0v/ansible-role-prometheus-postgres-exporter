@@ -18,7 +18,7 @@ Role Variables
 The variables that can be passed to this role and a brief description about them are as follows. (For all variables, take a look at defaults/main.yml)
 
 ```yaml
-postgres_exporter_version: 0.4.7
+postgres_exporter_version: 0.8.0
 ```
 version for installation
 

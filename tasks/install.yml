@@ -41,7 +41,7 @@
     state: directory
     owner: "{{ postgres_exporter_user }}"
     group: "{{ postgres_exporter_group }}"
-    mode: 0750
+    mode: 0755
 
 - block:
 
@@ -63,17 +63,13 @@
     - name: unpack binaries
       unarchive:
         src: "{{ postgres_exporter_root_dir }}/tmp/{{ postgres_exporter_archive_name }}"
-        dest: "{{ postgres_exporter_root_dir }}/tmp"
+        dest: "{{ deploy_helper.new_release_path }}"
         remote_src: yes
-        creates: "{{ postgres_exporter_root_dir }}/tmp/{{ postgres_exporter_extracted_dir }}/postgres_exporter"
+        creates: "{{ deploy_helper.new_release_path }}/postgres_exporter"
+        extra_opts: [--strip-components=1]
         owner: "{{ postgres_exporter_user }}"
         group: "{{ postgres_exporter_group }}"
-
-    - name: propagate binaries
-      command: mv {{ postgres_exporter_root_dir }}/tmp/{{ postgres_exporter_extracted_dir }}/{{ item }} {{ deploy_helper.new_release_path }}
-      tags: skip_ansible_lint
-      with_items:
-        - postgres_exporter
+        mode: 0755
 
   when: not postgres_exporter_bin.stat.exists or postgres_exporter_force_install|bool
 

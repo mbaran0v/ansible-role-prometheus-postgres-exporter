@@ -1,7 +1,7 @@
 
 debian_os = ['debian', 'ubuntu']
 rhel_os = ['redhat', 'centos']
-version = '0.5.1'
+version = '0.8.0'
 root_dir = '/opt/postgres_exporter'
 config_file = root_dir + '/shared/' + '/envs'
 service_name = 'postgres_exporter'

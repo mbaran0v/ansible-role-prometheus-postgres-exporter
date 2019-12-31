@@ -1,6 +1,6 @@
 ---
 
-postgres_exporter_version: 0.5.1
+postgres_exporter_version: 0.8.0
 postgres_exporter_web_listen_address: ":9187"
 postgres_exporter_log_level: "info"
 
